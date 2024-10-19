@@ -20,7 +20,7 @@ function ToggleTerminal()
         end
     else
         -- If the terminal doesn't exist, create a new one
-		if fn.OS == "windows_NT" then
+		if fn.OS == "Windows_NT" then
 			vim.cmd("split | term powershell")
 		else
 			vim.cmd("split | term bash")
