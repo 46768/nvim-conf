@@ -11,10 +11,11 @@ return {
 	config = function()
 		local lspZero = require("lsp-zero")
 		local cmp = require("cmp")
+		local lspconfig = require("lspconfig")
 		local lspAttach = function(client, bufnr)
 			local opts = { buffer = bufnr }
 
-			vim.keymap.set("n", "ce", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
+			vim.keymap.set("n", "ec", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
 		end
 
 		lspZero.extend_lspconfig({
@@ -31,7 +32,7 @@ return {
 					if serverName == 'ts_ls' then
 						local mason_registry = require('mason-registry')
 						local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
-						require("lspconfig").ts_ls.setup({
+						lspconfig.ts_ls.setup({
 							init_options = {
 								plugins = {
 									{
@@ -45,7 +46,19 @@ return {
 						})
 						return
 					end
-					require("lspconfig")[serverName].setup({})
+					if serverName == 'arduino_language_server' then
+						lspconfig.arduino_language_server.setup({
+							cmd = {
+								"arduino-language-server",
+								"-cli-config", "C:/Users/yrth/AppData/Local/Arduino15/arduino-cli.yaml"
+							}
+						})
+						return
+					end
+					if serverName == 'jdtls' then
+						return
+					end
+					lspconfig[serverName].setup({})
 				end
 			}
 		})

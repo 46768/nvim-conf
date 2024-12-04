@@ -1,4 +1,4 @@
 require("startup.terminal")
 
-vim.cmd.NvimTreeFocus()
+vim.cmd.Neotree()
 

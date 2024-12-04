@@ -1,8 +1,19 @@
+local OSName = vim.loop.os_uname().sysname
+
 local module = {
-	feedKeyN = function (keybind)
-		vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keybind, true, false, true), 'n', true)
+	OS = OSName,
+	DATA = vim.fn.stdpath('data'),
+
+	normalizePath = function(path)
+		path = path:gsub("\\", "/")
+		return path
 	end,
-	OS = vim.loop.os_uname().sysname,
+	fixMasonBin = function(path)
+		if OSName == "Windows_NT" then
+			path = path .. ".cmd"
+		end
+		return path
+	end,
 }
 
 return module
