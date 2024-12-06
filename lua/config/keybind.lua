@@ -1,4 +1,4 @@
-vim.keymap.set("n", "<Leader>pv", vim.cmd.NvimTreeFocus)
+vim.keymap.set("n", "<Leader>pv", vim.cmd.Neotree)
 vim.keymap.set("n", "<Leader>qq", "<cmd>q<cr>")
 vim.keymap.set("n", "<Leader>ww", "<cmd>w<cr>")
 vim.keymap.set("n", "<Leader>gs", "<cmd>Git<cr>")

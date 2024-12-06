@@ -46,15 +46,6 @@ return {
 						})
 						return
 					end
-					if serverName == 'arduino_language_server' then
-						lspconfig.arduino_language_server.setup({
-							cmd = {
-								"arduino-language-server",
-								"-cli-config", "C:/Users/yrth/AppData/Local/Arduino15/arduino-cli.yaml"
-							}
-						})
-						return
-					end
 					if serverName == 'jdtls' then
 						return
 					end
