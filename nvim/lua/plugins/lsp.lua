@@ -30,7 +30,7 @@ return {
 		-- Setup mason
 		local mason = require('mason')
 		mason.setup({
-			path = "append"
+			PATH = "append"
 		})
 
 		-- Setup mason lsp configurator
