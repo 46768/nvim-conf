@@ -1,63 +1,64 @@
+local lsConfig = require("lsConfig.config")
+
 return {
-	'VonHeikemen/lsp-zero.nvim',
-	branch = 'v4.x',
+	'neovim/nvim-lspconfig',
 	dependencies = {
-		'neovim/nvim-lspconfig',
 		'hrsh7th/cmp-nvim-lsp',
 		'hrsh7th/nvim-cmp',
 		'williamboman/mason.nvim',
 		'williamboman/mason-lspconfig.nvim',
 	},
 	config = function()
-		local lspZero = require("lsp-zero")
-		local cmp = require("cmp")
-		local lspconfig = require("lspconfig")
-		local lspAttach = function(client, bufnr)
-			local opts = { buffer = bufnr }
+		vim.opt.signcolumn = 'yes'
 
-			vim.keymap.set("n", "ec", "<cmd>lua vim.diagnostic.open_float()<cr>", opts)
-		end
+		local lspconfigDefaults = require('lspconfig').util.default_config
+		lspconfigDefaults.capabilities = vim.tbl_deep_extend(
+		'force',
+		lspconfigDefaults.capabilities,
+		require('cmp_nvim_lsp').default_capabilities()
+		)
 
-		lspZero.extend_lspconfig({
-			sign_text = true,
-			lsp_attach = lspAttach,
-			--capabilities = require("cmp_nvim_lsp").default_capabilities(),
+		vim.api.nvim_create_autocmd('LspAttach', {
+			desc = 'LSP Actions',
+			callback = function(event)
+				local opts = { buffer = event.buf }
+
+				vim.keymap.set('n', 'ec', vim.diagnostic.open_float, opts)
+			end,
 		})
 
-		require("mason").setup({})
-		require("mason-lspconfig").setup({
-			ensure_installed = {'lua_ls', 'clangd', 'ts_ls', 'pylsp', 'volar',},
+		-- Setup mason
+		local mason = require('mason')
+		mason.setup({
+			path = "append"
+		})
+
+		-- Setup mason lsp configurator
+		local masonLsp = require('mason-lspconfig')
+		masonLsp.setup({
+			ensure_installed = lsConfig["ensureInstalled"],
 			handlers = {
 				function(serverName)
-					if serverName == 'ts_ls' then
-						local mason_registry = require('mason-registry')
-						local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
-						lspconfig.ts_ls.setup({
-							init_options = {
-								plugins = {
-									{
-										name = '@vue/typescript-plugin',
-										location = vue_language_server_path,
-										languages = { 'vue' },
-									},
-								},
-							},
-							filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-						})
-						return
+					if lsConfig[serverName] ~= nil then
+						require('lspconfig')[serverName].setup(lsConfig[serverName])
+					else
+						require('lspconfig')[serverName].setup({})
 					end
-					if serverName == 'jdtls' then
-						return
-					end
-					lspconfig[serverName].setup({})
 				end
 			}
 		})
 
+		-- Setup autocompletion
+		local cmp = require('cmp')
 		cmp.setup({
 			sources = {
 				{name = 'nvim_lsp'},
 				{name = 'buffer'},
+			},
+			snippet = {
+				expand = function(args)
+					vim.snippet.expand(args.body)
+				end,
 			},
 			mapping = cmp.mapping.preset.insert({
 				['<C-c>'] = cmp.mapping.confirm({select = true}),

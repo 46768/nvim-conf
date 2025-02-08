@@ -1,5 +1,5 @@
 local OSName = vim.loop.os_uname().sysname
-function fixPath(path)
+local function fixPath(path)
 	path = path:gsub("\\", "/")
 	return path
 end
