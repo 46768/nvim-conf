@@ -13,4 +13,4 @@ vim.opt.updatetime = 10
 
 vim.opt.termguicolors = true
 
-vim.opt.colorcolumn = "80,100"
+vim.opt.colorcolumn = "72,80,100"
