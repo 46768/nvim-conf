@@ -1,7 +1,7 @@
 return {
 	ensureInstalled = {
 		'lua_ls', 'ts_ls', 'pylsp',
-		'clangd', 'marksman'
+		'clangd'
 	},
 	clangd = {
 		cmd = { 'clangd' }
