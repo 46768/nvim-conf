@@ -9,8 +9,6 @@ return {
 		{ "mason-org/mason-lspconfig.nvim", version = "1.32.0" },
 	},
 	config = function()
-		vim.opt.signcolumn = 'yes'
-
 		local lspconfigDefaults = require('lspconfig').util.default_config
 		lspconfigDefaults.capabilities = vim.tbl_deep_extend(
 		'force',
